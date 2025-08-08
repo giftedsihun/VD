@@ -224,45 +224,40 @@ def main():
                     st.divider()
         else:
             st.info("아직 다운로드 중인 항목이 없습니다.")
-    
-    # 다운로드된 파일 목록
-    st.header("📁 다운로드된 파일")
-    
-    if os.path.exists(download_folder):
-        files = [f for f in os.listdir(download_folder) if os.path.isfile(os.path.join(download_folder, f))]
-        
-        if files:
-            for file in files:
-                file_path = os.path.join(download_folder, file)
-                if os.path.exists(file_path):
-                    file_size = os.path.getsize(file_path)
-                    file_size_mb = file_size / (1024 * 1024)
-                else:
-                    file_size_mb = 0.0 # 파일이 없으면 0으로 설정하거나 다른 처리를 할 수 있습니다.
-                col1, col2, col3 = st.columns([3, 1, 1])
-                
-                with col1:
-                    st.write(f"📄 {file}")
-                
-                with col2:
-                    st.write(f"{file_size_mb:.1f} MB")
-                
-                with col3:
-                    # 파일 다운로드 버튼
-                    with open(file_path, "rb") as f:
-                        st.download_button(
-                            label="다운로드",
-                            data=f.read(),
-                            file_name=file,
-                            mime="video/mp4"
-                        )
-        else:
-            st.info("다운로드된 파일이 없습니다.")
-    
+
+    # 🔻 다운로드된 파일 목록 제거됨 (아래 코드 삭제 또는 주석 처리됨)
+    # st.header("📁 다운로드된 파일")
+    # if os.path.exists(download_folder):
+    #     files = [f for f in os.listdir(download_folder) if os.path.isfile(os.path.join(download_folder, f))]
+    #     if files:
+    #         for file in files:
+    #             file_path = os.path.join(download_folder, file)
+    #             if os.path.exists(file_path):
+    #                 file_size = os.path.getsize(file_path)
+    #                 file_size_mb = file_size / (1024 * 1024)
+    #             else:
+    #                 file_size_mb = 0.0
+    #             col1, col2, col3 = st.columns([3, 1, 1])
+    #             with col1:
+    #                 st.write(f"📄 {file}")
+    #             with col2:
+    #                 st.write(f"{file_size_mb:.1f} MB")
+    #             with col3:
+    #                 with open(file_path, "rb") as f:
+    #                     st.download_button(
+    #                         label="다운로드",
+    #                         data=f.read(),
+    #                         file_name=file,
+    #                         mime="video/mp4"
+    #                     )
+    #     else:
+    #         st.info("다운로드된 파일이 없습니다.")
+
     # 자동 새로고침 (진행 상황 업데이트용)
     if st.session_state.download_progress:
         time.sleep(1)
         st.rerun()
+
 
 if __name__ == "__main__":
     main()
