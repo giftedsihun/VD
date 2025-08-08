@@ -65,7 +65,7 @@ def get_video_info(url):
         return {'error': str(e)}
 
 def download_video(url, output_path, quality='best', download_type='video', progress_callback=None):
-    \"\"\"비디오 다운로드\"\"\"
+    """비디오 다운로드"""
     try:
         ydl_opts = {
             'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
@@ -261,6 +261,8 @@ def main():디오 다운로더")
 
 if __name__ == "__main__":
     main()
+
+
 
 
 
