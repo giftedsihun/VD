@@ -64,32 +64,47 @@ def get_video_info(url):
     except Exception as e:
         return {'error': str(e)}
 
-def download_video(url, output_path, quality='best', progress_callback=None):
-    """비디오 다운로드"""
+def download_video(url, output_path, quality=\'best\', download_type=\'video\', progress_callback=None):
+    \"\"\"비디오 다운로드\"\"\"
     try:
         ydl_opts = {
-            'format': quality,
-            'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
-            'progress_hooks': [progress_callback.progress_hook] if progress_callback else [],
+            \'outtmpl\': os.path.join(output_path, \'%(title)s.%(ext)s\'),
+            \'progress_hooks\': [progress_callback.progress_hook] if progress_callback else [],
         }
-        
+
+        if download_type == \'video\':
+            ydl_opts[\'format\'] = quality
+        elif download_type == \'audio\':
+            ydl_opts[\'format\'] = \'bestaudio/best\'
+            ydl_opts[\'postprocessors\'] = [{
+                \'key\': \'FFmpegExtractAudio\',
+                \'preferredcodec\': \'mp3\',
+                \'preferredquality\': \'192\',
+            }]
+
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
         return True
     except Exception as e:
         if progress_callback:
             progress_callback.error = str(e)
-            progress_callback.status = f"오류: {str(e)}"
+            progress_callback.status = f\"오류: {str(e)}\"
         return False
 
-def main():
-    st.title("📹 비디오 다운로더")
+def main():디오 다운로더")
     st.markdown("YouTube, Instagram, X.com 등 다양한 플랫폼에서 비디오를 다운로드하세요!")
     
     # 사이드바 설정
     with st.sidebar:
         st.header("⚙️ 설정")
         
+        # 다운로드 타입 선택
+        download_type = st.radio(
+            "다운로드 타입 선택",
+            ("비디오 (Video)", "오디오 (Audio)"),
+            index=0
+        )
+
         # 품질 선택
         quality_options = {
             'best': '최고 품질',
@@ -175,8 +190,7 @@ def main():
             # 다운로드 시작
             with st.spinner("다운로드를 시작하는 중..."):
                 def download_thread():
-                    success = download_video(url, download_folder, selected_quality, progress_tracker)
-                    if success:
+                    success = download_video(url, download_folder, selected_quality, download_type, progress_tracker)                    if success:
                         progress_tracker.status = "다운로드 완료!"
                     else:
                         progress_tracker.status = f"다운로드 실패: {progress_tracker.error}"
@@ -248,4 +262,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
