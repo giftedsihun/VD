@@ -62,7 +62,7 @@ def get_video_info(url):
                 'thumbnail': info.get('thumbnail', None)
             }
     except Exception as e:
-        return {'error': str(e)}
+        return {"error": str(e)}
 
 def download_video(url, output_path, quality='best', download_type='video', progress_callback=None):
     """비디오 다운로드"""
@@ -74,11 +74,12 @@ def download_video(url, output_path, quality='best', download_type='video', prog
 
         if download_type == 'video':
             ydl_opts["format"] = quality
-        elif download_type == 'audio':            ydl_opts["format"] = "bestaudio/best"
-            ydl_opts[\'postprocessors\'] = [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
+        elif download_type == 'audio':
+            ydl_opts["format"] = "bestaudio/best"
+            ydl_opts["postprocessors"] = [{
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": "192",
             }]
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -87,10 +88,11 @@ def download_video(url, output_path, quality='best', download_type='video', prog
     except Exception as e:
         if progress_callback:
             progress_callback.error = str(e)
-            progress_callback.status = f\"오류: {str(e)}\"
+            progress_callback.status = f"오류: {str(e)}"
         return False
 
-def main():디오 다운로더")
+def main():
+    st.title("비디오 다운로더")
     st.markdown("YouTube, Instagram, X.com 등 다양한 플랫폼에서 비디오를 다운로드하세요!")
     
     # 사이드바 설정
@@ -98,11 +100,13 @@ def main():디오 다운로더")
         st.header("⚙️ 설정")
         
         # 다운로드 타입 선택
-        download_type = st.radio(
+        download_type_selection = st.radio(
             "다운로드 타입 선택",
             ("비디오 (Video)", "오디오 (Audio)"),
             index=0
         )
+        # 실제 download_type 변수에 할당
+        download_type = "video" if download_type_selection == "비디오 (Video)" else "audio"
 
         # 품질 선택
         quality_options = {
@@ -189,7 +193,8 @@ def main():디오 다운로더")
             # 다운로드 시작
             with st.spinner("다운로드를 시작하는 중..."):
                 def download_thread():
-                    success = download_video(url, download_folder, selected_quality, download_type, progress_tracker)                    if success:
+                    success = download_video(url, download_folder, selected_quality, download_type, progress_tracker)
+                    if success:
                         progress_tracker.status = "다운로드 완료!"
                     else:
                         progress_tracker.status = f"다운로드 실패: {progress_tracker.error}"
@@ -261,6 +266,8 @@ def main():디오 다운로더")
 
 if __name__ == "__main__":
     main()
+
+
 
 
 
