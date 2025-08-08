@@ -64,22 +64,21 @@ def get_video_info(url):
     except Exception as e:
         return {'error': str(e)}
 
-def download_video(url, output_path, quality=\'best\', download_type=\'video\', progress_callback=None):
+def download_video(url, output_path, quality='best', download_type='video', progress_callback=None):
     \"\"\"비디오 다운로드\"\"\"
     try:
         ydl_opts = {
-            \'outtmpl\': os.path.join(output_path, \'%(title)s.%(ext)s\'),
-            \'progress_hooks\': [progress_callback.progress_hook] if progress_callback else [],
+            'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
+            'progress_hooks': [progress_callback.progress_hook] if progress_callback else [],
         }
 
-        if download_type == \'video\':
-            ydl_opts[\'format\'] = quality
-        elif download_type == \'audio\':
-            ydl_opts[\'format\'] = \'bestaudio/best\'
+        if download_type == 'video':
+            ydl_opts["format"] = quality
+        elif download_type == 'audio':            ydl_opts["format"] = "bestaudio/best"
             ydl_opts[\'postprocessors\'] = [{
-                \'key\': \'FFmpegExtractAudio\',
-                \'preferredcodec\': \'mp3\',
-                \'preferredquality\': \'192\',
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
             }]
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -262,5 +261,7 @@ def main():디오 다운로더")
 
 if __name__ == "__main__":
     main()
+
+
 
 
